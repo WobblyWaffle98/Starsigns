@@ -12,7 +12,7 @@ google_search_tool = Tool(
 
 response = client.models.generate_content(
     model=model_id,
-    contents="Whats the latest news in global economy over the past 2 weeks or so?",
+    contents="Whats the latest news in US and China economy over the past week?",
     config=GenerateContentConfig(
         tools=[google_search_tool],
         response_modalities=["TEXT"],
