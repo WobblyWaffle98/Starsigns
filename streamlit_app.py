@@ -20,9 +20,9 @@ response = client.models.generate_content(
 )
 
 for each in response.candidates[0].content.parts:
-    print(each.text)
+    st.write(each.text)
 # Example response:
 # The next total solar eclipse visible in the contiguous United States will be on ...
 
 # To get grounding metadata as web content.
-st.write_stream(response.candidates[0].grounding_metadata.search_entry_point.rendered_content)
+st.write(response.candidates[0].grounding_metadata.search_entry_point.rendered_content)
