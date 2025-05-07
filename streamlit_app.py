@@ -18,9 +18,9 @@ news_type = st.selectbox("Select news category:", ["Macroeconomic", "Oil and Gas
 # Build query based on type
 if st.button("Get News"):
     if news_type == "Macroeconomic":
-        user_query = "What’s the latest macroeconomic news from the US and China in the past week?"
+        user_query = "What’s the latest macroeconomic news from the US and China in the past week? Please write in a way of an economic analyst and in paragraphs"
     else:
-        user_query = "What are the latest update to Brent crude prices and news impacting the price?"
+        user_query = "What are the latest update to Brent crude prices and news impacting the price? Please write in a way of an analyst and in paragraphs"
 
     # Call the model with tools
     response = client.models.generate_content(
