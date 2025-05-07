@@ -11,17 +11,16 @@ google_search_tool = Tool(
 )
 
 # User interface
-st.title("NewsBot")
+st.title("Star Signs")
 news_type = st.selectbox("Select news category:", ["Macroeconomic", "Oil and Gas"])
-user_query = st.text_input("Ask your question:")
+
 
 # Build query based on type
 if st.button("Get News"):
-    if not user_query:
-        if news_type == "Macroeconomic":
-            user_query = "What’s the latest macroeconomic news from the US and China in the past week?"
-        else:
-            user_query = "What are the latest oil and gas industry updates?"
+    if news_type == "Macroeconomic":
+        user_query = "What’s the latest macroeconomic news from the US and China in the past week?"
+    else:
+        user_query = "What are the latest update to Brent crude prices and news impacting the price?"
 
     # Call the model with tools
     response = client.models.generate_content(
