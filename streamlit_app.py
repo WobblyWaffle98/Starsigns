@@ -10,15 +10,30 @@ google_search_tool = Tool(
     google_search = GoogleSearch()
 )
 
-response = client.models.generate_content(
-    model=model_id,
-    contents="Whats the latest news in US and China economy over the past week?",
-    config=GenerateContentConfig(
-        tools=[google_search_tool],
-        response_modalities=["TEXT"],
-    )
-)
+# User interface
+st.title("NewsBot")
+news_type = st.selectbox("Select news category:", ["Macroeconomic", "Oil and Gas"])
+user_query = st.text_input("Ask your question:")
 
-for each in response.candidates[0].content.parts:
-    st.write(each.text)
+# Build query based on type
+if st.button("Get News"):
+    if not user_query:
+        if news_type == "Macroeconomic":
+            user_query = "What’s the latest macroeconomic news from the US and China in the past week?"
+        else:
+            user_query = "What are the latest oil and gas industry updates?"
+
+    # Call the model with tools
+    response = client.models.generate_content(
+        model=model_id,
+        contents=user_query,
+        config=GenerateContentConfig(
+            tools=[google_search_tool],
+            response_modalities=["TEXT"],
+        )
+    )
+
+    # Display results
+    for part in response.candidates[0].content.parts:
+        st.write(part.text)
 
