@@ -12,7 +12,7 @@ google_search_tool = Tool(
 
 response = client.models.generate_content(
     model=model_id,
-    contents="When is the next total solar eclipse in the United States?",
+    contents="Whats the latest news in global economy over the past 2 weeks or so?",
     config=GenerateContentConfig(
         tools=[google_search_tool],
         response_modalities=["TEXT"],
@@ -21,8 +21,4 @@ response = client.models.generate_content(
 
 for each in response.candidates[0].content.parts:
     st.write(each.text)
-# Example response:
-# The next total solar eclipse visible in the contiguous United States will be on ...
 
-# To get grounding metadata as web content.
-st.write(response.candidates[0].grounding_metadata.search_entry_point.rendered_content)
