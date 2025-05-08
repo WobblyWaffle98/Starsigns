@@ -12,7 +12,7 @@ google_search_tool = Tool(
 # User interface
 st.title("Star Signs 🌟")
 
-with st.chat_message("user"):
+with st.chat_message("Macro Bot"):
     st.write("Hello Humans👋")
     user_query = "Provide the latest economic outlook for the global economy, with a focus on the United States and China."
 
