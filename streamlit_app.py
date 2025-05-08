@@ -9,6 +9,8 @@ google_search_tool = Tool(
     google_search = GoogleSearch()
 )
 
+st.set_page_config(layout="wide")
+
 # User interface
 st.title("Star Signs 🌟")
 
