@@ -1,5 +1,4 @@
 import streamlit as st
-
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
 
@@ -11,7 +10,7 @@ google_search_tool = Tool(
 )
 
 # User interface
-st.title("Star Signs")
+st.title("Star Signs 🌟")
 news_type = st.selectbox("Select news category:", ["Macroeconomic", "Oil and Gas"])
 
 
