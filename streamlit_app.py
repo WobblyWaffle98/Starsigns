@@ -13,13 +13,34 @@ google_search_tool = Tool(
 st.title("Star Signs 🌟")
 
 with st.chat_message("Macro-Bot", avatar="🌍"):
-    st.write("Hello Humans👋")
+    st.write("Hello Humans👋, I am Macro Bot")
     user_query = (
     "Provide the latest economic outlook for the global economy from reputable sources, "
     "with a specific focus on the United States and China. Include recent data or revisions "
     "related to key macroeconomic indicators such as inflation, GDP growth, labor market conditions, "
     "unemployment rates, international trade, and consumer sentiment. Mention the source and date "
     "of any forecast or revision cited."
+)
+
+
+    # Call the model with tools
+    response = client.models.generate_content(
+        model=model_id,
+        contents=user_query,
+        config=GenerateContentConfig(
+            tools=[google_search_tool],
+            response_modalities=["TEXT"],
+        )
+    )
+    # Display results
+    for part in response.candidates[0].content.parts:
+        st.write(part.text)
+
+with st.chat_message("Fundamental-Bot", avatar="🛢️"):
+    st.write("Hello Humans👋, I am Fundamental Bot")
+    user_query = (
+    "Provide the latest outlook for the crude oil from reputable sources, "
+    "with a specific focus on the supply and demand balances aswell as anything related to fundamentals"
 )
 
 
