@@ -43,7 +43,7 @@ st.markdown("""
 
 # Branding
 st.title("🌟 Stellar Feed")
-st.caption("🚀 Signals from the Future, Curated by AI")
+st.caption("🚀 A Stellar View of World Events curated by AI")
 
 # Define reusable function
 def get_response(prompt: str) -> str:
