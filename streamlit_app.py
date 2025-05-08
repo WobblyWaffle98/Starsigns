@@ -11,15 +11,10 @@ google_search_tool = Tool(
 
 # User interface
 st.title("Star Signs 🌟")
-news_type = st.selectbox("Select news category:", ["Macroeconomic", "Oil and Gas"])
 
-
-# Build query based on type
-if st.button("Get News"):
-    if news_type == "Macroeconomic":
-        user_query = "What’s the latest macroeconomic news from the US and China in the past week? Please write in a way of an economic analyst and in paragraphs"
-    else:
-        user_query = "What are yesterday update to Brent crude prices and news impacting the price? Please write in a way of an analyst and in paragraphs"
+with st.chat_message("user"):
+    st.write("Hello Humans👋")
+    user_query = "write the latest outlook on global economy and crude oil"
 
     # Call the model with tools
     response = client.models.generate_content(
@@ -30,7 +25,6 @@ if st.button("Get News"):
             response_modalities=["TEXT"],
         )
     )
-
     # Display results
     for part in response.candidates[0].content.parts:
         st.write(part.text)
