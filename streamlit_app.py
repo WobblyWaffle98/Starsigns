@@ -79,13 +79,15 @@ fundamentals_prompt = (
     "Do not include any updates on numerical price movements. Cite the sources and dates of any forecasts or revisions."
 )
 
-# Content Layout
-col1, col2 = st.columns(2)
+
 
 # Display news content
 st.subheader("🌐 Top Global News")
 with st.spinner("Fetching top news..."):
     st.write(get_response(top_news_prompt))
+
+# Content Layout
+col1, col2 = st.columns(2)
 
 # Column 1: Macro
 with col1:
