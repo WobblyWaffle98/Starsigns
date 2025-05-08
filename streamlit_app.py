@@ -14,7 +14,7 @@ st.title("Star Signs 🌟")
 
 with st.chat_message("Macro Bot"):
     st.write("Hello Humans👋")
-    user_query = "Provide the latest economic outlook for the global economy, with a focus on the United States and China."
+    user_query = "Provide the latest economic outlook for the global economy, with a focus on the United States and China. Start with a short executive summary before going into details"
 
 
     # Call the model with tools
