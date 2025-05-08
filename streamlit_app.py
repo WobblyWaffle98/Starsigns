@@ -14,7 +14,13 @@ st.title("Star Signs 🌟")
 
 with st.chat_message("assistant"):
     st.write("Hello Humans👋")
-    user_query = "Provide the latest economic outlook from reputable sources for the global economy, with a focus on the United States and China. Mention the source of any revisions and outlook."
+    user_query = (
+    "Provide the latest economic outlook for the global economy from reputable sources, "
+    "with a specific focus on the United States and China. Include recent data or revisions "
+    "related to key macroeconomic indicators such as inflation, GDP growth, labor market conditions, "
+    "unemployment rates, international trade, and consumer sentiment. Mention the source and date "
+    "of any forecast or revision cited."
+)
 
 
     # Call the model with tools
