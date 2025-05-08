@@ -1,6 +1,6 @@
 import streamlit as st
 from google import genai
-from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
+from google.genai.types import Tool, GenerateContentConfig, GoogleSearch # type: ignore
 
 client = genai.Client(api_key="AIzaSyA0jZkj5buSGm6AXtXlo6CEeFS1f8q0KSg")
 model_id = "gemini-2.0-flash"
