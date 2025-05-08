@@ -39,10 +39,12 @@ with st.chat_message("Macro-Bot", avatar="🌍"):
 with st.chat_message("Fundamental-Bot", avatar="🛢️"):
     st.write("Hello Humans👋, I am Fundamental Bot")
     user_query = (
-    "Provide the latest outlook for the crude oil from reputable sources, "
-    "with a specific focus on the supply and demand balances aswell as anything related to fundamentals"
+    "Provide the latest outlook on the crude oil market from reputable sources, "
+    "focusing on key fundamentals such as global supply-demand balances, inventory levels, and production forecasts. "
+    "Include updates or commentary on OPEC and its allies (OPEC+), as well as major oil-producing and consuming countries "
+    "such as the United States, Saudi Arabia, Russia, and China. Mention any recent policy decisions, geopolitical developments, "
+    "or market-moving news, and cite the sources and dates of any forecasts or revisions."
 )
-
 
     # Call the model with tools
     response = client.models.generate_content(
