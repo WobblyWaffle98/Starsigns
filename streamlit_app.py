@@ -43,7 +43,7 @@ with st.chat_message("Fundamental-Bot", avatar="🛢️"):
     "focusing on key fundamentals such as global supply-demand balances, inventory levels, and production forecasts. "
     "Include updates or commentary on OPEC and its allies (OPEC+), as well as major oil-producing and consuming countries "
     "such as the United States, Saudi Arabia, Russia, and China. Mention any recent policy decisions, geopolitical developments, "
-    "or market-moving news, and cite the sources and dates of any forecasts or revisions."
+    "Do not include any updates on numerical price movements. Cite the sources and dates of any forecasts or revisions."
 )
 
     # Call the model with tools
