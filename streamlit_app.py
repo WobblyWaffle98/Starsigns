@@ -3,7 +3,7 @@ from google import genai
 from google.genai.types import Tool, GenerateContentConfig, GoogleSearch  # type: ignore
 
 # Initialize Google Gemini Client
-client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])  # Use Streamlit secrets for safety
+client = genai.Client(api_key="AIzaSyA0jZkj5buSGm6AXtXlo6CEeFS1f8q0KSg")  # Use Streamlit secrets for safety
 model_id = "gemini-2.0-flash"
 
 # Define the tool
