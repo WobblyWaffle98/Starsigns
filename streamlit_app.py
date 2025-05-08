@@ -44,19 +44,19 @@ fundamentals_prompt = (
 
 # Layout with two columns
 col1, col2 = st.columns(2)
+if st.button("Refresh", key="refresh_1"):
+    # Column 1: Macroeconomy
+    with col1:
+        st.header("Macroeconomy")
+        with st.chat_message("Macro-Bot", avatar="🌍"):
+            st.write("Hello Humans 👋, I am Macro Bot")
+            with st.spinner("Fetching the latest macroeconomic data..."):
+                st.write(get_response(macro_prompt))
 
-# Column 1: Macroeconomy
-with col1:
-    st.header("Macroeconomy")
-    with st.chat_message("Macro-Bot", avatar="🌍"):
-        st.write("Hello Humans 👋, I am Macro Bot")
-        with st.spinner("Fetching the latest macroeconomic data..."):
-            st.write(get_response(macro_prompt))
-
-# Column 2: Fundamentals
-with col2:
-    st.header("Fundamentals")
-    with st.chat_message("Fundamental-Bot", avatar="🛢️"):
-        st.write("Hello Humans 👋, I am Fundamental Bot")
-        with st.spinner("Fetching the latest oil market fundamentals..."):
-            st.write(get_response(fundamentals_prompt))
+    # Column 2: Fundamentals
+    with col2:
+        st.header("Fundamentals")
+        with st.chat_message("Fundamental-Bot", avatar="🛢️"):
+            st.write("Hello Humans 👋, I am Fundamental Bot")
+            with st.spinner("Fetching the latest oil market fundamentals..."):
+                st.write(get_response(fundamentals_prompt))
