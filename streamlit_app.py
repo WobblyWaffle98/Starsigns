@@ -14,7 +14,7 @@ st.title("Star Signs 🌟")
 
 with st.chat_message("user"):
     st.write("Hello Humans👋")
-    user_query = "write the latest outlook on global economy and crude oil"
+    user_query = "write the latest outlook on global economy, US and China"
 
     # Call the model with tools
     response = client.models.generate_content(
