@@ -26,6 +26,8 @@ def get_response(prompt: str) -> str:
     return "\n".join([part.text for part in response.candidates[0].content.parts])
 
 # Define prompts
+top_news_prompt = ("whats the top global news today regarding Politics and International Relations, Economics and Finance")
+
 macro_prompt = (
     "Provide the latest economic outlook for the global economy from reputable sources, "
     "with a specific focus on the United States and China. Include recent data or revisions "
@@ -42,9 +44,13 @@ fundamentals_prompt = (
     "Do not include any updates on numerical price movements. Cite the sources and dates of any forecasts or revisions."
 )
 
+
 # Layout with two columns
 col1, col2 = st.columns(2)
 if st.button("Refresh", key="refresh_1"):
+    with st.spinner("Fetching the latest top news..."):
+        st.write(get_response(top_news_prompt))
+    
     # Column 1: Macroeconomy
     with col1:
         st.header("Macroeconomy")
