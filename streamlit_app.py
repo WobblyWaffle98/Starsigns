@@ -50,15 +50,13 @@ with col1:
     st.header("Macroeconomy")
     with st.chat_message("Macro-Bot", avatar="🌍"):
         st.write("Hello Humans 👋, I am Macro Bot")
-        if st.button("Fetch Macro Update", key="macro"):
-            with st.spinner("Fetching the latest macroeconomic data..."):
-                st.write(get_response(macro_prompt))
+        with st.spinner("Fetching the latest macroeconomic data..."):
+            st.write(get_response(macro_prompt))
 
 # Column 2: Fundamentals
 with col2:
     st.header("Fundamentals")
     with st.chat_message("Fundamental-Bot", avatar="🛢️"):
         st.write("Hello Humans 👋, I am Fundamental Bot")
-        if st.button("Fetch Oil Market Update", key="fundamentals"):
-            with st.spinner("Fetching the latest oil market fundamentals..."):
-                st.write(get_response(fundamentals_prompt))
+        with st.spinner("Fetching the latest oil market fundamentals..."):
+            st.write(get_response(fundamentals_prompt))
