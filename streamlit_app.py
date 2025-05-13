@@ -59,7 +59,7 @@ def get_response(prompt: str) -> str:
 
 # Prompts
 top_news_prompt = (
-    "Get me up to date to the latest news regarding finance and economics and crude oil newsy over the last three days"
+    "Get me up to date to the latest news regarding finance and economics and crude oil news over the last three days. I don't need any numerical price update"
 )
 
 macro_prompt = (
