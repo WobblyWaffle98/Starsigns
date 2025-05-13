@@ -59,8 +59,7 @@ def get_response(prompt: str) -> str:
 
 # Prompts
 top_news_prompt = (
-    "What's the top global news today regarding Politics and International Relations, "
-    "Economics and Finance?"
+    "Get me up to date to the latest news regarding finance and economics and crude oil price over the last three days"
 )
 
 macro_prompt = (
