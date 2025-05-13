@@ -107,4 +107,4 @@ with col2:
 # Refresh button at the bottom
 st.markdown("---")
 if st.button("🔄 Refresh All Feeds"):
-    st.experimental_rerun()
+    st.rerun()
