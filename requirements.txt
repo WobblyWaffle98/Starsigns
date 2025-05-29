@@ -1,9 +1,3 @@
-streamlit>=1.28.0
-google-generativeai>=0.3.0
-
-# Optional: Only install PyAudio if needed for real-time playback
-# pyaudio>=0.2.11
-
-# Alternative audio libraries (choose one)
-soundfile>=0.12.1
-pydub>=0.25.1
+streamlit
+google-genai
+wave
