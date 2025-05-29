@@ -94,77 +94,89 @@ class PresentationGenerator:
         """Generate presentation transcript with real market data for single presenter"""
         
         if use_real_data:
-            # Enhanced prompt with real-time search integration for single presenter
+            # Enhanced prompt with real-time search integration for single presenter, optimized for natural audio transcript
             search_enhanced_prompt = f"""
             You are generating a professional oil market presentation transcript for an analyst named {presenter_name} presenting to the GCEM team.
-            
+            The goal is to produce a natural-sounding, spoken-word transcript that could be read aloud by the presenter.
+
             IMPORTANT: Use Google Search to find the most recent and accurate information about crude oil markets from the past week.
-            
+            Focus on data and events from the past 7-10 days leading up to today, May 29, 2025.
+
             Search for and include:
-            1. Current Brent crude oil prices and recent price movements (this week vs last week)
-            2. Recent OPEC+ production decisions, meetings, and announcements
-            3. Weekly EIA inventory data and petroleum status reports
-            4. Geopolitical events affecting oil markets (Middle East, Russia, etc.)
-            5. Major oil company earnings, production updates, and industry news
-            6. Economic factors impacting crude oil demand (US, China, Europe)
-            7. Supply disruptions, refinery issues, or infrastructure news
-            
-            Search specifically for information from these sources:
+            1. Current Brent and WTI crude oil prices, recent price movements (this week vs. last week, and year-to-date changes).
+            2. Recent OPEC+ production decisions, meeting outcomes, and announcements, including specific dates and production quotas/adjustments.
+            3. Latest weekly EIA inventory data (crude oil, gasoline, distillates) and petroleum status reports, including specific figures and changes.
+            4. Key geopolitical events affecting oil markets (Middle East, Russia, Ukraine, etc.) and their specific impact.
+            5. Major oil company earnings reports, production updates, and significant industry news from the past week.
+            6. Economic factors impacting crude oil demand (US, China, Europe, global growth forecasts) with specific data points.
+            7. Supply disruptions, refinery issues, or infrastructure news with details (e.g., location, impact).
+
+            Prioritize information from these reputable sources:
             - Bloomberg Energy and oil market reports
             - Reuters Oil & Gas news
-            - EIA (Energy Information Administration) weekly reports
-            - OPEC official announcements and press releases
+            - EIA (Energy Information Administration) weekly reports and analyses
+            - OPEC official announcements, press releases, and monthly reports
             - Oil & Gas Journal market updates
             - Platts/S&P Global Commodity Insights
             - Financial Times energy section
-            
-            Create a professional presentation by {presenter_name} that includes:
-            
+            - Wall Street Journal energy coverage
+
+            Structure the presentation as a flowing narrative from {presenter_name}, like a spoken transcript.
+            Begin the presentation as if {presenter_name} is speaking directly to the audience.
+
             {presenter_name.upper()}: "Good day GCEM team! I'm {presenter_name}, and let's dive into this week's crude oil market developments..."
-            
-            The presentation should cover:
-            - Current price levels with specific numbers and percentage changes
-            - Key supply-side developments (OPEC+, US shale, international production)
-            - Demand factors and economic indicators affecting consumption
-            - Geopolitical influences and market sentiment
-            - Inventory levels and refining margins
-            - Technical analysis and chart patterns
-            - Forward curve and futures market activity
-            - Market outlook for the coming week
-            
-            {presenter_name.upper()} should conclude with: "That's our market wrap for this week. Thanks for joining us, GCEM team!"
-            
-            Make sure to:
-            - Include real, specific data points and price levels from your searches
-            - Reference actual dates and events from the past week
-            - Use professional energy market terminology
-            - Keep the tone conversational but informative
-            - Ensure all information is factual and recently sourced
-            - Present as a single speaker ({presenter_name}) throughout
+
+            The presentation should cover the following topics in a conversational, informative style, naturally integrating the data you find:
+
+            **1. Price Action:** Discuss current Brent and WTI prices, how they've moved over the past week (e.g., "up x%", "down y%"), and broader trends since the start of the year, providing specific numbers.
+            **2. Supply-Side Dynamics:**
+                * **OPEC+:** Explain recent decisions, any announced production adjustments, and the context of their strategy. Mention specific meeting dates if relevant.
+                * **US Production:** Summarize the latest EIA data on US refinery inputs and production, and discuss trends in US shale.
+                * **Other Non-OPEC Supply:** Briefly mention other significant non-OPEC production news.
+                * **Production Issues/Disruptions:** Detail any recent supply disruptions or halts, including locations and companies involved.
+            **3. Demand Factors and Economic Indicators:**
+                * **Global Demand Growth:** Present the latest forecasts for global oil demand, citing sources like the IEA.
+                * **Economic Slowdown:** Discuss any economic concerns (e.g., in China, US) and their potential impact on oil demand, including specific economic data or reports.
+                * **Oil Major Earnings:** Mention recent earnings reports from major oil companies and what they indicate about the industry.
+            **4. Geopolitical Influences:** Describe current geopolitical tensions (e.g., Middle East, Russia) and how they are affecting oil markets.
+            **5. Inventory Levels and Refining Margins:** Provide the latest EIA data on US crude oil inventories and discuss trends in refining margins.
+            **6. Technical Analysis and Market Sentiment:** Briefly touch upon current market sentiment (bullish/bearish) and any key factors influencing it.
+            **7. Forward Curve and Futures Market Activity:** Mention significant movements in futures prices.
+            **8. Market Outlook for the Coming Week:** Summarize the key factors to watch in the week ahead.
+
+            Ensure the transcript is:
+            -   **Natural and Conversational:** Use language appropriate for a spoken presentation.
+            -   **Data-Rich and Specific:** Include exact dates, price points, percentage changes, and inventory figures obtained from your searches.
+            -   **Professionally Termed:** Utilize standard energy market vocabulary.
+            -   **Coherent and Flowing:** Transitions between topics should be smooth, as if a person is speaking.
+            -   **Factual and Timely:** All information must be recent (past week) and verifiable.
+            -   **Single Speaker:** Maintain the persona of {presenter_name} throughout.
+
+            Conclude the presentation with: "{presenter_name.upper()}: That's our market wrap for this week. Thanks for joining us, GCEM team!"
             """
-            
+
             prompt = custom_prompt if custom_prompt else search_enhanced_prompt
         else:
-            # Fallback to basic prompt without real data
+            # Fallback to basic prompt without real data, still aiming for a natural transcript style
             prompt = custom_prompt if custom_prompt else f"""
             Generate a professional transcript for an analyst named {presenter_name} 
             presenting crude oil market developments to the GCEM team.
-            
+            The transcript should sound natural and conversational, as if being read aloud.
+
             Start with: "{presenter_name.upper()}: Good day GCEM team! I'm {presenter_name}..."
-            
+
             Cover key topics like:
             - Brent and WTI crude price movements
             - OPEC+ production decisions
             - US inventory data
             - Geopolitical factors
             - Market outlook
-            
+
+            Use professional, yet conversational language.
             End with: "{presenter_name.upper()}: That's our market wrap for this week. Thanks for joining us, GCEM team!"
-            
-            Keep it professional and informative for energy traders.
+
             Present as a single speaker ({presenter_name}) throughout.
             """
-        
         try:
             # Generate content with Google Search tool enabled
             if use_real_data:
