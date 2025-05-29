@@ -124,7 +124,7 @@ class PresentationGenerator:
             - Wall Street Journal energy coverage
 
             The transcript *must* begin precisely with:
-            {presenter_name.upper()}: "Good day GCEM team! I'm {presenter_name}, and let's dive into this week's crude oil market developments..."
+            "Good day GCEM team! I'm {presenter_name}, and let's dive into this week's crude oil market developments..."
 
             Then, proceed directly into the content, discussing:
             - Current price levels, movements, and year-to-date performance.
@@ -146,7 +146,7 @@ class PresentationGenerator:
             -   **Single Speaker:** Maintains the persona of {presenter_name} throughout, with explicit speaker cues.
 
             The transcript *must* end precisely with:
-            {presenter_name.upper()}: "That's our market wrap for this week. Thanks for joining us, GCEM team!"
+            "That's our market wrap for this week. Thanks for joining us, GCEM team!"
             """
 
             prompt = custom_prompt if custom_prompt else search_enhanced_prompt
@@ -257,7 +257,38 @@ def main():
         
         presenter_voice = st.selectbox(
             "Presenter Voice",
-            ["Charon", "Puck", "Kore", "Fenrir", "Vindemiatrix"],
+            [
+            "Zephyr",
+            "Puck",
+            "Charon",
+            "Kore",
+            "Fenrir",
+            "Leda",
+            "Orus",
+            "Aoede",
+            "Callirrhoe",
+            "Autonoe",
+            "Enceladus",
+            "Iapetus",
+            "Umbriel",
+            "Algieba",
+            "Despina",
+            "Erinome",
+            "Algenib",
+            "Rasalgethi",
+            "Laomedeia",
+            "Achernar",
+            "Alnilam",
+            "Schedar",
+            "Gacrux",
+            "Pulcherrima",
+            "Achird",
+            "Zubenelgenubi",
+            "Vindemiatrix",
+            "Sadachbia",
+            "Sadaltager",
+            "Sulafat"
+            ],
             index=0,
             help="Select the voice for the presenter"
         )
