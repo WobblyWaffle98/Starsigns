@@ -98,14 +98,14 @@ class PresentationGenerator:
             search_enhanced_prompt = f"""
             You are generating a professional oil market presentation transcript for an analyst named {presenter_name} presenting to the GCEM team.
             The *entire output* must be a natural-sounding, spoken-word transcript that could be read aloud by the presenter.
-            **Do NOT include any section titles, headings, bullet points, or any introductory/concluding remarks from yourself (the AI).**
+            **Do NOT include any section titles, headings, bullet points, speaker cue,  or any introductory/concluding remarks from yourself (the AI).**
             The presentation should flow as a continuous narrative.
 
             IMPORTANT: Use Google Search to find the most recent and accurate information about crude oil markets from the past week.
             Focus on data and events from the past 7-10 days leading up to today, May 29, 2025.
 
             Search for and include:
-            1. Current Brent and WTI crude oil prices, recent price movements (this week vs. last week, and year-to-date changes), with specific numbers and percentage changes.
+            1. Current Brent acrude oil prices, recent price movements (this week vs. last week, and year-to-date changes), with specific numbers and percentage changes.
             2. Recent OPEC+ production decisions, meeting outcomes, and announcements, including specific dates, production quotas/adjustments, and future plans.
             3. Latest weekly EIA inventory data (crude oil, gasoline, distillates) and petroleum status reports, including specific figures and changes.
             4. Key geopolitical events affecting oil markets (Middle East, Russia, Ukraine, etc.) and their specific impact.
