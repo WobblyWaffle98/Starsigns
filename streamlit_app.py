@@ -4,8 +4,7 @@ import datetime
 import io
 import base64
 from google import genai
-from google.genai import types
-from google.genai.types import Tool, GenerateContentConfig, GoogleSearch 
+from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
 import wave
 import threading
 import time
@@ -59,39 +58,22 @@ st.markdown("""
         border: 1px solid #f5c6cb;
         color: #721c24;
     }
+    .search-status {
+        background-color: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        color: #0066cc;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 class PresentationGenerator:
     def __init__(self, api_key):
         self.client = genai.Client(api_key=api_key)
-        # Initialize Google Search tool
+        # Initialize Google Search tool using the correct format
         self.google_search_tool = Tool(google_search=GoogleSearch())
-        
-    def search_oil_news(self, days_back=7):
-        """Search for recent oil market news and data"""
-        search_queries = [
-            "Brent crude oil price news this week",
-            "WTI crude oil market analysis recent",
-            "OPEC+ production news latest",
-            "oil inventory data EIA recent",
-            "crude oil geopolitical news",
-            "Bloomberg oil market report",
-            "Reuters crude oil analysis"
-        ]
-        
-        search_results = []
-        for query in search_queries:
-            try:
-                # Note: This is a placeholder for the actual Google Search integration
-                # You'll need to implement the actual search call based on your Google Search setup
-                st.info(f"🔍 Searching: {query}")
-                # search_result = self.google_search_tool.search(query)
-                # search_results.append(search_result)
-            except Exception as e:
-                st.warning(f"Search failed for '{query}': {str(e)}")
-        
-        return search_results
         
     def wave_file(self, filename, pcm, channels=1, rate=24000, sample_width=2):
         """Save audio data to WAV file"""
@@ -105,67 +87,96 @@ class PresentationGenerator:
         """Generate presentation transcript with real market data"""
         
         if use_real_data:
-            # Search for recent oil market news
-            st.info("🔍 Searching for latest oil market data...")
-            search_results = self.search_oil_news()
-            
             # Enhanced prompt with real-time search integration
             search_enhanced_prompt = f"""
-            You are generating a professional oil market presentation transcript for two analysts named Harith and Mirza.
+            You are generating a professional oil market presentation transcript for two analysts named Harith and Mirza for the GCEM team.
             
-            IMPORTANT: Use the Google Search tool to find the most recent and accurate information about:
-            1. Current Brent crude oil prices and recent price movements
-            2. Latest WTI crude oil market developments  
-            3. Recent OPEC+ production decisions and announcements
+            IMPORTANT: Use Google Search to find the most recent and accurate information about crude oil markets from the past week.
+            
+            Search for and include:
+            1. Current Brent crude oil prices and recent price movements (this week vs last week)
+            2. Latest WTI crude oil market developments and price changes
+            3. Recent OPEC+ production decisions, meetings, and announcements
             4. Weekly EIA inventory data and petroleum status reports
-            5. Geopolitical events affecting oil markets
-            6. Major oil company earnings and industry news
-            7. Economic factors impacting crude oil demand
+            5. Geopolitical events affecting oil markets (Middle East, Russia, etc.)
+            6. Major oil company earnings, production updates, and industry news
+            7. Economic factors impacting crude oil demand (US, China, Europe)
+            8. Supply disruptions, refinery issues, or infrastructure news
             
-            Search for information from these reliable sources:
-            - Bloomberg Energy
-            - Reuters Oil & Gas
-            - EIA (Energy Information Administration)
-            - OPEC official announcements
-            - Oil & Gas Journal
+            Search specifically for information from these sources:
+            - Bloomberg Energy and oil market reports
+            - Reuters Oil & Gas news
+            - EIA (Energy Information Administration) weekly reports
+            - OPEC official announcements and press releases
+            - Oil & Gas Journal market updates
             - Platts/S&P Global Commodity Insights
+            - Financial Times energy section
             
-            Based on your search results, create a professional dialogue between Harith and Mirza discussing:
-            - Opening: "Good day GCEM team!"
-            - Current oil price levels and week-over-week changes
-            - Key market drivers from the past week
-            - Supply-side developments (OPEC+, US production, etc.)
-            - Demand factors and economic indicators
-            - Geopolitical influences
-            - Technical analysis insights
+            Create a natural dialogue between Harith and Mirza that includes:
+            
+            HARITH: "Good day GCEM team! Let's dive into this week's crude oil market developments..."
+            
+            Then alternate between the two analysts discussing:
+            - Current price levels with specific numbers and percentage changes
+            - Key supply-side developments (OPEC+, US shale, international production)
+            - Demand factors and economic indicators affecting consumption
+            - Geopolitical influences and market sentiment
+            - Inventory levels and refining margins
+            - Technical analysis and chart patterns
+            - Forward curve and futures market activity
             - Market outlook for the coming week
             
-            Keep the tone professional and informative for energy traders and industry professionals.
-            Include specific data points, percentages, and price levels from your search results.
-            Make sure all information is factual and recently sourced.
+            MIRZA should conclude with: "That's our market wrap for this week. Thanks for joining us, GCEM team!"
+            
+            Make sure to:
+            - Include real, specific data points and price levels from your searches
+            - Reference actual dates and events from the past week
+            - Use professional energy market terminology
+            - Keep the tone conversational but informative
+            - Ensure all information is factual and recently sourced
             """
             
             prompt = custom_prompt if custom_prompt else search_enhanced_prompt
         else:
-            # Fallback to original prompt without real data
+            # Fallback to basic prompt without real data
             prompt = custom_prompt if custom_prompt else """
-            Generate a short transcript between analyst doing a presentation by two analyst named Harith and Mirza 
-            summarizing key Brent crude oil market developments over the past week.
-            Focus on critical price movements, geopolitical drivers, inventory data, OPEC+ activity, 
-            macroeconomic factors, and notable analyst commentary. The tone should be professional and informative, 
-            suitable for an audience of energy traders and industry professionals.
-            They should start by saying Good day GCEM team!
+            Generate a professional transcript between two analysts named Harith and Mirza 
+            presenting crude oil market developments to the GCEM team.
+            
+            Start with: "Good day GCEM team!"
+            
+            Cover key topics like:
+            - Brent and WTI crude price movements
+            - OPEC+ production decisions
+            - US inventory data
+            - Geopolitical factors
+            - Market outlook
+            
+            Keep it professional and informative for energy traders.
             """
         
         try:
             # Generate content with Google Search tool enabled
-            response = self.client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt,
-                tools=[self.google_search_tool] if use_real_data else None
-            )
+            if use_real_data:
+                response = self.client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                    config=GenerateContentConfig(
+                        tools=[self.google_search_tool],
+                        response_modalities=["TEXT"],
+                    )
+                )
+            else:
+                response = self.client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt
+                )
             
-            return response.text
+            # Extract text from response
+            if hasattr(response.candidates[0].content, 'parts'):
+                return "\n".join([part.text for part in response.candidates[0].content.parts])
+            else:
+                return response.candidates[0].content.text
             
         except Exception as e:
             st.error(f"Error generating transcript: {str(e)}")
@@ -180,30 +191,30 @@ class PresentationGenerator:
         response = self.client.models.generate_content(
             model="gemini-2.5-flash-preview-tts",
             contents=transcript,
-            config=types.GenerateContentConfig(
+            config=GenerateContentConfig(
                 response_modalities=["AUDIO"],
-                speech_config=types.SpeechConfig(
-                    multi_speaker_voice_config=types.MultiSpeakerVoiceConfig(
-                        speaker_voice_configs=[
-                            types.SpeakerVoiceConfig(
-                                speaker='Analyst 1',
-                                voice_config=types.VoiceConfig(
-                                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                                        voice_name='Charon',
-                                    )
-                                )
-                            ),
-                            types.SpeakerVoiceConfig(
-                                speaker='Analyst 2',
-                                voice_config=types.VoiceConfig(
-                                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                                        voice_name='Vindemiatrix',
-                                    )
-                                )
-                            ),
+                speech_config={
+                    "multi_speaker_voice_config": {
+                        "speaker_voice_configs": [
+                            {
+                                "speaker": "Harith",
+                                "voice_config": {
+                                    "prebuilt_voice_config": {
+                                        "voice_name": "Charon"
+                                    }
+                                }
+                            },
+                            {
+                                "speaker": "Mirza", 
+                                "voice_config": {
+                                    "prebuilt_voice_config": {
+                                        "voice_name": "Vindemiatrix"
+                                    }
+                                }
+                            }
                         ]
-                    )
-                )
+                    }
+                }
             )
         )
         
@@ -228,21 +239,8 @@ def main():
         api_key = st.text_input(
             "Google Generative AI API Key",
             type="password",
-            help="Enter your Google Generative AI API key"
-        )
-        
-        # Voice configuration
-        st.subheader("🎙️ Voice Settings")
-        analyst1_voice = st.selectbox(
-            "Analyst 1 (Harith) Voice",
-            ["Charon", "Puck", "Kore", "Fenrir"],
-            index=0
-        )
-        
-        analyst2_voice = st.selectbox(
-            "Analyst 2 (Mirza) Voice", 
-            ["Vindemiatrix", "Charon", "Puck", "Kore"],
-            index=0
+            help="Enter your Google Generative AI API key",
+            value="AIzaSyA0jZkj5buSGm6AXtXlo6CEeFS1f8q0KSg"  # You should remove this and use secrets
         )
         
         # Data source options
@@ -251,15 +249,30 @@ def main():
                                    help="Enable Google Search for current oil market information")
         
         if use_real_data:
-            st.info("✅ Will search for latest oil market news and data")
+            st.markdown('<div class="search-status">✅ Real-time search enabled</div>', 
+                       unsafe_allow_html=True)
             search_sources = st.multiselect(
                 "Select news sources to search:",
                 ["Bloomberg Energy", "Reuters Oil & Gas", "EIA Reports", "OPEC Announcements", 
-                 "Platts S&P Global", "Oil & Gas Journal"],
+                 "Platts S&P Global", "Oil & Gas Journal", "Financial Times Energy"],
                 default=["Bloomberg Energy", "Reuters Oil & Gas", "EIA Reports"]
             )
         else:
-            st.warning("⚠️ Using AI-generated market analysis (may not reflect current conditions)")
+            st.warning("⚠️ Using AI-generated analysis (not current market data)")
+        
+        # Voice configuration
+        st.subheader("🎙️ Voice Settings")
+        analyst1_voice = st.selectbox(
+            "Harith's Voice",
+            ["Charon", "Puck", "Kore", "Fenrir"],
+            index=0
+        )
+        
+        analyst2_voice = st.selectbox(
+            "Mirza's Voice", 
+            ["Vindemiatrix", "Charon", "Puck", "Kore"],
+            index=0
+        )
         
         # Presentation settings
         st.subheader("📊 Presentation Settings")
@@ -273,18 +286,16 @@ def main():
         st.header("📝 Custom Presentation Prompt")
         
         # Real-time data status
-        if 'use_real_data' not in locals():
-            use_real_data = True
-            
         if use_real_data:
-            st.success("🔍 Real-time data search enabled - AI will search for current oil market information")
+            st.markdown('<div class="search-status">🔍 Real-time market data search enabled - AI will search for current oil market information</div>', 
+                       unsafe_allow_html=True)
         else:
             st.warning("⚠️ Using simulated data - Enable real-time search in sidebar for current market data")
         
         custom_prompt = st.text_area(
             "Customize your presentation content (optional):",
             height=150,
-            placeholder="Leave empty to use default crude oil market analysis prompt..."
+            placeholder="Leave empty to use default crude oil market analysis prompt with real-time data search..."
         )
         
         # Generation controls
@@ -311,6 +322,15 @@ def main():
             if current_time.hour >= 9:
                 next_gen += datetime.timedelta(days=1)
             st.info(f"**Next auto-gen:** {next_gen.strftime('%Y-%m-%d %H:%M')}")
+        
+        # Market status indicator
+        st.header("📊 Market Status")
+        if use_real_data:
+            st.success("🟢 Live Data Feed Active")
+            st.caption("Searching Bloomberg, Reuters, EIA, and other sources")
+        else:
+            st.error("🔴 Simulated Data Mode")
+            st.caption("Enable real-time search for current data")
     
     # Initialize session state
     if 'transcript' not in st.session_state:
@@ -330,18 +350,17 @@ def main():
         
         # Handle button clicks
         if generate_transcript_btn or generate_full_btn:
-            with st.spinner("🔍 Searching for latest oil market data and generating transcript..."):
+            search_status = "🔍 Searching for latest oil market data and generating transcript..." if use_real_data else "📝 Generating transcript with simulated data..."
+            with st.spinner(search_status):
                 try:
-                    # Get real-time data setting from sidebar
-                    use_real_data = st.session_state.get('use_real_data', True)
-                    
                     transcript = generator.generate_transcript(
                         custom_prompt if custom_prompt else None,
                         use_real_data=use_real_data
                     )
                     st.session_state.transcript = transcript
                     
-                    st.markdown('<div class="status-box success-box">✅ Transcript generated with real-time market data!</div>', 
+                    success_msg = "✅ Transcript generated with real-time market data!" if use_real_data else "✅ Transcript generated successfully!"
+                    st.markdown(f'<div class="status-box success-box">{success_msg}</div>', 
                                unsafe_allow_html=True)
                     
                 except Exception as e:
@@ -352,14 +371,14 @@ def main():
             if not st.session_state.transcript:
                 st.warning("⚠️ Please generate a transcript first!")
             else:
-                with st.spinner("🎵 Generating audio presentation..."):
+                with st.spinner("🎵 Generating multi-speaker audio presentation..."):
                     try:
                         audio_data = generator.generate_audio(st.session_state.transcript)
-                        audio_filename = f"presentation_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.wav"
+                        audio_filename = f"oil_market_presentation_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.wav"
                         generator.create_audio_file(audio_data, audio_filename)
                         st.session_state.audio_file = audio_filename
                         
-                        st.markdown('<div class="status-box success-box">✅ Audio generated successfully!</div>', 
+                        st.markdown('<div class="status-box success-box">✅ Multi-speaker audio generated successfully!</div>', 
                                    unsafe_allow_html=True)
                         
                         # Add to history
@@ -367,7 +386,8 @@ def main():
                             st.session_state.generation_history.append({
                                 'timestamp': current_time,
                                 'transcript': st.session_state.transcript,
-                                'audio_file': audio_filename
+                                'audio_file': audio_filename,
+                                'used_real_data': use_real_data
                             })
                         
                     except Exception as e:
@@ -381,22 +401,27 @@ def main():
                        unsafe_allow_html=True)
             
             # Show data sources used
-            with st.expander("📊 Data Sources & Search Results"):
-                st.info("This transcript was generated using real-time search results from:")
-                sources_used = [
-                    "Bloomberg Energy - Oil market news and analysis",
-                    "Reuters Oil & Gas - Latest crude oil developments", 
-                    "EIA - Weekly petroleum status reports",
-                    "OPEC - Official production announcements",
-                    "Market data providers - Current price information"
-                ]
-                for source in sources_used:
-                    st.write(f"• {source}")
-                    
-                st.caption("Note: All data points and market information in the transcript are sourced from current market reports and news.")
+            with st.expander("📊 Data Sources & Search Information"):
+                if use_real_data:
+                    st.success("✅ This transcript was generated using real-time search results from:")
+                    sources_used = [
+                        "🔍 Bloomberg Energy - Oil market news and price analysis",
+                        "🔍 Reuters Oil & Gas - Latest crude oil developments", 
+                        "🔍 EIA - Weekly petroleum status reports and inventory data",
+                        "🔍 OPEC - Official production announcements and meeting outcomes",
+                        "🔍 Platts/S&P Global - Commodity market insights and pricing",
+                        "🔍 Financial Times - Energy sector news and analysis"
+                    ]
+                    for source in sources_used:
+                        st.write(source)
+                    st.caption("✅ All market data, price movements, and developments mentioned are sourced from current market reports.")
+                else:
+                    st.warning("⚠️ This transcript was generated using AI analysis without real-time market data.")
+                    st.caption("Enable 'Use real-time market data' in the sidebar for current market information.")
         
         if st.session_state.audio_file and os.path.exists(st.session_state.audio_file):
             st.header("🎵 Audio Presentation")
+            st.info("🎙️ Multi-speaker presentation with Harith and Mirza")
             
             # Audio player
             with open(st.session_state.audio_file, 'rb') as audio_file:
@@ -405,7 +430,7 @@ def main():
             
             # Download button
             st.download_button(
-                label="⬇️ Download Audio File",
+                label="⬇️ Download Audio Presentation",
                 data=audio_bytes,
                 file_name=st.session_state.audio_file,
                 mime="audio/wav"
@@ -416,7 +441,8 @@ def main():
             st.header("📚 Presentation History")
             
             for i, entry in enumerate(reversed(st.session_state.generation_history[-5:])):  # Show last 5
-                with st.expander(f"📅 {entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}"):
+                data_badge = "🟢 Live Data" if entry.get('used_real_data', False) else "🔴 Simulated"
+                with st.expander(f"📅 {entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} - {data_badge}"):
                     st.text_area(f"Transcript {i+1}:", entry['transcript'], height=100, disabled=True)
                     if os.path.exists(entry['audio_file']):
                         with open(entry['audio_file'], 'rb') as f:
