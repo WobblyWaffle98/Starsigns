@@ -95,13 +95,12 @@ class PresentationGenerator:
             
             Search for and include:
             1. Current Brent crude oil prices and recent price movements (this week vs last week)
-            2. Latest WTI crude oil market developments and price changes
-            3. Recent OPEC+ production decisions, meetings, and announcements
-            4. Weekly EIA inventory data and petroleum status reports
-            5. Geopolitical events affecting oil markets (Middle East, Russia, etc.)
-            6. Major oil company earnings, production updates, and industry news
-            7. Economic factors impacting crude oil demand (US, China, Europe)
-            8. Supply disruptions, refinery issues, or infrastructure news
+            2. Recent OPEC+ production decisions, meetings, and announcements
+            3. Weekly EIA inventory data and petroleum status reports
+            4. Geopolitical events affecting oil markets (Middle East, Russia, etc.)
+            5. Major oil company earnings, production updates, and industry news
+            6. Economic factors impacting crude oil demand (US, China, Europe)
+            7. Supply disruptions, refinery issues, or infrastructure news
             
             Search specifically for information from these sources:
             - Bloomberg Energy and oil market reports
@@ -112,7 +111,7 @@ class PresentationGenerator:
             - Platts/S&P Global Commodity Insights
             - Financial Times energy section
             
-            Create a natural dialogue between Harith and Mirza that includes:
+            Create a professional presentation by Harith and Mirza that includes:
             
             HARITH: "Good day GCEM team! Let's dive into this week's crude oil market developments..."
             
