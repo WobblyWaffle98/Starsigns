@@ -5,7 +5,7 @@ import io
 import base64
 from google import genai
 from google.genai import types
-from google.genai.tools import GoogleSearch, Tool
+from google.genai.types import Tool, GenerateContentConfig, GoogleSearch 
 import wave
 import threading
 import time
