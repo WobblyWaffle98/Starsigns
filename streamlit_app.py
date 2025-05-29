@@ -66,6 +66,13 @@ st.markdown("""
         border-radius: 5px;
         margin: 10px 0;
     }
+    .presenter-info {
+        background-color: #f0f8ff;
+        border: 1px solid #b3d9ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -83,13 +90,13 @@ class PresentationGenerator:
             wf.setframerate(rate)
             wf.writeframes(pcm)
     
-    def generate_transcript(self, custom_prompt=None, use_real_data=True):
-        """Generate presentation transcript with real market data"""
+    def generate_transcript(self, presenter_name="Alex", custom_prompt=None, use_real_data=True):
+        """Generate presentation transcript with real market data for single presenter"""
         
         if use_real_data:
-            # Enhanced prompt with real-time search integration
+            # Enhanced prompt with real-time search integration for single presenter
             search_enhanced_prompt = f"""
-            You are generating a professional oil market presentation transcript for two analysts named Harith and Mirza for the GCEM team.
+            You are generating a professional oil market presentation transcript for an analyst named {presenter_name} presenting to the GCEM team.
             
             IMPORTANT: Use Google Search to find the most recent and accurate information about crude oil markets from the past week.
             
@@ -111,11 +118,11 @@ class PresentationGenerator:
             - Platts/S&P Global Commodity Insights
             - Financial Times energy section
             
-            Create a professional presentation by Harith and Mirza that includes:
+            Create a professional presentation by {presenter_name} that includes:
             
-            HARITH: "Good day GCEM team! Let's dive into this week's crude oil market developments..."
+            {presenter_name.upper()}: "Good day GCEM team! I'm {presenter_name}, and let's dive into this week's crude oil market developments..."
             
-            Then alternate between the two analysts discussing:
+            The presentation should cover:
             - Current price levels with specific numbers and percentage changes
             - Key supply-side developments (OPEC+, US shale, international production)
             - Demand factors and economic indicators affecting consumption
@@ -125,7 +132,7 @@ class PresentationGenerator:
             - Forward curve and futures market activity
             - Market outlook for the coming week
             
-            MIRZA should conclude with: "That's our market wrap for this week. Thanks for joining us, GCEM team!"
+            {presenter_name.upper()} should conclude with: "That's our market wrap for this week. Thanks for joining us, GCEM team!"
             
             Make sure to:
             - Include real, specific data points and price levels from your searches
@@ -133,16 +140,17 @@ class PresentationGenerator:
             - Use professional energy market terminology
             - Keep the tone conversational but informative
             - Ensure all information is factual and recently sourced
+            - Present as a single speaker ({presenter_name}) throughout
             """
             
             prompt = custom_prompt if custom_prompt else search_enhanced_prompt
         else:
             # Fallback to basic prompt without real data
-            prompt = custom_prompt if custom_prompt else """
-            Generate a professional transcript between two analysts named Harith and Mirza 
+            prompt = custom_prompt if custom_prompt else f"""
+            Generate a professional transcript for an analyst named {presenter_name} 
             presenting crude oil market developments to the GCEM team.
             
-            Start with: "Good day GCEM team!"
+            Start with: "{presenter_name.upper()}: Good day GCEM team! I'm {presenter_name}..."
             
             Cover key topics like:
             - Brent and WTI crude price movements
@@ -151,7 +159,10 @@ class PresentationGenerator:
             - Geopolitical factors
             - Market outlook
             
+            End with: "{presenter_name.upper()}: That's our market wrap for this week. Thanks for joining us, GCEM team!"
+            
             Keep it professional and informative for energy traders.
+            Present as a single speaker ({presenter_name}) throughout.
             """
         
         try:
@@ -182,36 +193,21 @@ class PresentationGenerator:
             # Fallback to basic generation without search
             if use_real_data:
                 st.warning("Falling back to basic generation without real-time data...")
-                return self.generate_transcript(custom_prompt, use_real_data=False)
+                return self.generate_transcript(presenter_name, custom_prompt, use_real_data=False)
             raise e
     
-    def generate_audio(self, transcript):
-        """Generate audio from transcript using multi-speaker TTS"""
+    def generate_audio(self, transcript, voice_name="Charon"):
+        """Generate audio from transcript using single-speaker TTS"""
         response = self.client.models.generate_content(
             model="gemini-2.5-flash-preview-tts",
             contents=transcript,
             config=GenerateContentConfig(
                 response_modalities=["AUDIO"],
                 speech_config={
-                    "multi_speaker_voice_config": {
-                        "speaker_voice_configs": [
-                            {
-                                "speaker": "Harith",
-                                "voice_config": {
-                                    "prebuilt_voice_config": {
-                                        "voice_name": "Charon"
-                                    }
-                                }
-                            },
-                            {
-                                "speaker": "Mirza", 
-                                "voice_config": {
-                                    "prebuilt_voice_config": {
-                                        "voice_name": "Vindemiatrix"
-                                    }
-                                }
-                            }
-                        ]
+                    "voice_config": {
+                        "prebuilt_voice_config": {
+                            "voice_name": voice_name
+                        }
                     }
                 }
             )
@@ -242,6 +238,31 @@ def main():
             value="AIzaSyA0jZkj5buSGm6AXtXlo6CEeFS1f8q0KSg"  # You should remove this and use secrets
         )
         
+        # Presenter configuration
+        st.subheader("🎙️ Presenter Settings")
+        presenter_name = st.text_input(
+            "Presenter Name",
+            value="Alex",
+            help="Enter the name of the presenter",
+            max_chars=50
+        )
+        
+        presenter_voice = st.selectbox(
+            "Presenter Voice",
+            ["Charon", "Puck", "Kore", "Fenrir", "Vindemiatrix"],
+            index=0,
+            help="Select the voice for the presenter"
+        )
+        
+        # Show presenter info box
+        st.markdown(f"""
+        <div class="presenter-info">
+            <strong>🎤 Current Presenter:</strong><br>
+            Name: {presenter_name}<br>
+            Voice: {presenter_voice}
+        </div>
+        """, unsafe_allow_html=True)
+        
         # Data source options
         st.subheader("🔍 Data Sources")
         use_real_data = st.checkbox("Use real-time market data", value=True, 
@@ -258,20 +279,6 @@ def main():
             )
         else:
             st.warning("⚠️ Using AI-generated analysis (not current market data)")
-        
-        # Voice configuration
-        st.subheader("🎙️ Voice Settings")
-        analyst1_voice = st.selectbox(
-            "Harith's Voice",
-            ["Charon", "Puck", "Kore", "Fenrir"],
-            index=0
-        )
-        
-        analyst2_voice = st.selectbox(
-            "Mirza's Voice", 
-            ["Vindemiatrix", "Charon", "Puck", "Kore"],
-            index=0
-        )
         
         # Presentation settings
         st.subheader("📊 Presentation Settings")
@@ -294,7 +301,7 @@ def main():
         custom_prompt = st.text_area(
             "Customize your presentation content (optional):",
             height=150,
-            placeholder="Leave empty to use default crude oil market analysis prompt with real-time data search..."
+            placeholder=f"Leave empty to use default crude oil market analysis prompt with {presenter_name} as presenter..."
         )
         
         # Generation controls
@@ -330,6 +337,11 @@ def main():
         else:
             st.error("🔴 Simulated Data Mode")
             st.caption("Enable real-time search for current data")
+        
+        # Presenter status
+        st.header(f"🎤 Presenter: {presenter_name}")
+        st.info(f"Voice: {presenter_voice}")
+        st.caption("Single presenter format")
     
     # Initialize session state
     if 'transcript' not in st.session_state:
@@ -344,21 +356,27 @@ def main():
         st.warning("⚠️ Please enter your Google Generative AI API key in the sidebar to continue.")
         return
     
+    # Validate presenter name
+    if not presenter_name.strip():
+        st.warning("⚠️ Please enter a presenter name in the sidebar.")
+        return
+    
     try:
         generator = PresentationGenerator(api_key)
         
         # Handle button clicks
         if generate_transcript_btn or generate_full_btn:
-            search_status = "🔍 Searching for latest oil market data and generating transcript..." if use_real_data else "📝 Generating transcript with simulated data..."
+            search_status = f"🔍 Searching for latest oil market data and generating transcript for {presenter_name}..." if use_real_data else f"📝 Generating transcript for {presenter_name} with simulated data..."
             with st.spinner(search_status):
                 try:
                     transcript = generator.generate_transcript(
-                        custom_prompt if custom_prompt else None,
+                        presenter_name=presenter_name.strip(),
+                        custom_prompt=custom_prompt if custom_prompt else None,
                         use_real_data=use_real_data
                     )
                     st.session_state.transcript = transcript
                     
-                    success_msg = "✅ Transcript generated with real-time market data!" if use_real_data else "✅ Transcript generated successfully!"
+                    success_msg = f"✅ Transcript generated for {presenter_name} with real-time market data!" if use_real_data else f"✅ Transcript generated for {presenter_name} successfully!"
                     st.markdown(f'<div class="status-box success-box">{success_msg}</div>', 
                                unsafe_allow_html=True)
                     
@@ -370,20 +388,22 @@ def main():
             if not st.session_state.transcript:
                 st.warning("⚠️ Please generate a transcript first!")
             else:
-                with st.spinner("🎵 Generating multi-speaker audio presentation..."):
+                with st.spinner(f"🎵 Generating audio presentation with {presenter_name}'s voice ({presenter_voice})..."):
                     try:
-                        audio_data = generator.generate_audio(st.session_state.transcript)
-                        audio_filename = f"oil_market_presentation_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.wav"
+                        audio_data = generator.generate_audio(st.session_state.transcript, presenter_voice)
+                        audio_filename = f"oil_market_presentation_{presenter_name}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.wav"
                         generator.create_audio_file(audio_data, audio_filename)
                         st.session_state.audio_file = audio_filename
                         
-                        st.markdown('<div class="status-box success-box">✅ Multi-speaker audio generated successfully!</div>', 
+                        st.markdown(f'<div class="status-box success-box">✅ Audio generated successfully with {presenter_name}\'s voice!</div>', 
                                    unsafe_allow_html=True)
                         
                         # Add to history
                         if save_history:
                             st.session_state.generation_history.append({
                                 'timestamp': current_time,
+                                'presenter_name': presenter_name,
+                                'presenter_voice': presenter_voice,
                                 'transcript': st.session_state.transcript,
                                 'audio_file': audio_filename,
                                 'used_real_data': use_real_data
@@ -420,7 +440,7 @@ def main():
         
         if st.session_state.audio_file and os.path.exists(st.session_state.audio_file):
             st.header("🎵 Audio Presentation")
-            st.info("🎙️ Multi-speaker presentation with Harith and Mirza")
+            st.info(f"🎙️ Single presenter: {presenter_name} (Voice: {presenter_voice})")
             
             # Audio player
             with open(st.session_state.audio_file, 'rb') as audio_file:
@@ -441,7 +461,10 @@ def main():
             
             for i, entry in enumerate(reversed(st.session_state.generation_history[-5:])):  # Show last 5
                 data_badge = "🟢 Live Data" if entry.get('used_real_data', False) else "🔴 Simulated"
-                with st.expander(f"📅 {entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} - {data_badge}"):
+                presenter_info = entry.get('presenter_name', 'Unknown')
+                voice_info = entry.get('presenter_voice', 'Unknown')
+                
+                with st.expander(f"📅 {entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} - {presenter_info} ({voice_info}) - {data_badge}"):
                     st.text_area(f"Transcript {i+1}:", entry['transcript'], height=100, disabled=True)
                     if os.path.exists(entry['audio_file']):
                         with open(entry['audio_file'], 'rb') as f:
