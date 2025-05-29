@@ -5,16 +5,15 @@ import io
 import base64
 from google import genai
 from google.genai import types
-import pyaudio
 import wave
 import threading
 import time
 
-# Audio configuration constants
-FORMAT = pyaudio.paInt16
+# Audio configuration constants  
 CHANNELS = 1
 RATE = 24000
 CHUNK_SIZE = 1024
+SAMPLE_WIDTH = 2  # 16-bit audio
 
 # Page configuration
 st.set_page_config(
@@ -133,10 +132,8 @@ class PresentationGenerator:
     
     def create_audio_file(self, audio_data, filename="presentation.wav"):
         """Create WAV file from audio data"""
-        p = pyaudio.PyAudio()
         self.wave_file(filename, audio_data, channels=CHANNELS, rate=RATE, 
-                      sample_width=p.get_sample_size(FORMAT))
-        p.terminate()
+                      sample_width=SAMPLE_WIDTH)
         return filename
 
 def main():
